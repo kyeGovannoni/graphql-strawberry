@@ -44,29 +44,29 @@ data = {
 }
 
 #resolvers
-def get_persons(root:"Person", info: Info)-> typing.List["Person"]:
+async def get_persons(root:"Person", info: Info)-> typing.List["Person"]:
   return [Person(**person) for person in data['persons']]   
 
-def get_person(root:"Person", info: Info, id:int) -> "Person":
+async def get_person(root:"Person", info: Info, id:int) -> "Person":
     _person=[Person(**person) for person in data['persons'] if person['id'] == id ]
     return _person[0]
 
-def get_person_for_post(root:"Post", info: Info) -> "Person":
+async def get_person_for_post(root:"Post", info: Info) -> "Person":
     _person=[Person(**person) for person in data['persons'] if person['id'] == root.authorId ]
     return _person[0]
 
-def full_name(root: "Person", info: Info) -> str: 
+async def full_name(root: "Person", info: Info) -> str: 
     return f"{root.first_name} {root.last_name} {info.field_name}"
 
-def get_post(root: "Post", info: Info, id:int) -> typing.List["Post"]:
+async def get_post(root: "Post", info: Info, id:int) -> typing.List["Post"]:
   post=[Post(**post) for post in data['posts'] if post['id'] == id]
   return post[0]
 
-def get_posts(root: "Post", info: Info) -> typing.List["Post"]:
+async def get_posts(root: "Post", info: Info) -> typing.List["Post"]:
   posts=[Post(**post) for post in data['posts']]
   return posts
 
-def get_posts_for_author(root: "Person", info: Info ) -> "Post":
+async def get_posts_for_author(root: "Person", info: Info ) -> "Post":
   posts = [Post(**post) for post in data['posts'] if post['authorId'] == root.id ]   
   return posts
 

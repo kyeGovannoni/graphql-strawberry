@@ -16,7 +16,7 @@ conn_string = get_connection_string()
 conn_kwargs = add_pyodbc_for_access_token(credentials)
 
 #resolvers
-def get_vendor(name:str, root:"Vendor", info: Info)-> "Vendor":
+async def get_vendor(name:str, root:"Vendor", info: Info)-> "Vendor":
   results = get_sql_data(
       sql_statement= 'SELECT vendorId, vendor FROM vendors WHERE vendor = ?',
       parameters= ('%s'%(name),),
@@ -25,7 +25,7 @@ def get_vendor(name:str, root:"Vendor", info: Info)-> "Vendor":
     )  
   return data_to_schema_object(Vendor, results, True) 
 
-def get_vendor_for_taxis( root:"TaxiTrip", info: Info)-> "Vendor":
+async def get_vendor_for_taxis( root:"TaxiTrip", info: Info)-> "Vendor":
   results = get_sql_data(
       sql_statement= 'SELECT vendorId, vendor FROM vendors WHERE vendorId = ?',
       parameters= (root.vendorId,),
@@ -35,7 +35,7 @@ def get_vendor_for_taxis( root:"TaxiTrip", info: Info)-> "Vendor":
   return data_to_schema_object(Vendor, results, True) 
 
 
-def get_payment_type_for_taxis( root:"TaxiTrip", info: Info)-> "PaymentType":
+async def get_payment_type_for_taxis( root:"TaxiTrip", info: Info)-> "PaymentType":
   results = get_sql_data(
       sql_statement= 'SELECT id, paymentType FROM paymentTypes WHERE id = ?',
       parameters= (root.paymentType,),
@@ -45,7 +45,7 @@ def get_payment_type_for_taxis( root:"TaxiTrip", info: Info)-> "PaymentType":
   return data_to_schema_object(PaymentType, results, True) 
 
 
-def get_all_vendors(root:"Vendor", info: Info)-> typing.List["Vendor"]:
+async def get_all_vendors(root:"Vendor", info: Info)-> typing.List["Vendor"]:
   results = get_sql_data(
       sql_statement= 'SELECT vendorId, vendor FROM vendors',
       parameters= (),
@@ -54,7 +54,7 @@ def get_all_vendors(root:"Vendor", info: Info)-> typing.List["Vendor"]:
     )  
   return data_to_schema_object(Vendor, results, singleton=False) 
 
-def get_payment_type(name:str, root:"PaymentType", info: Info)-> "PaymentType":
+async def get_payment_type(name:str, root:"PaymentType", info: Info)-> "PaymentType":
   results = get_sql_data(
       sql_statement= 'SELECT id, paymentType FROM paymentTypes WHERE paymentType = ?',
       parameters= ('%s'%(name),),
@@ -63,7 +63,7 @@ def get_payment_type(name:str, root:"PaymentType", info: Info)-> "PaymentType":
     )  
   return data_to_schema_object(PaymentType, results, singleton=True) 
 
-def get_all_payment_type(root:"PaymentType", info: Info)-> typing.List["PaymentType"]:
+async def get_all_payment_type(root:"PaymentType", info: Info)-> typing.List["PaymentType"]:
   results = get_sql_data(
       sql_statement= 'SELECT id, paymentType FROM paymentTypes',
       parameters= (),
@@ -72,7 +72,7 @@ def get_all_payment_type(root:"PaymentType", info: Info)-> typing.List["PaymentT
     )  
   return data_to_schema_object(PaymentType, results, singleton=False) 
 
-def get_all_taxi_trips(root:"TaxiTrip", info: Info)-> typing.List["TaxiTrip"]:
+async def get_all_taxi_trips(root:"TaxiTrip", info: Info)-> typing.List["TaxiTrip"]:
   results = get_sql_data(
       sql_statement= 'SELECT \
                         vendorId, tpepPickupDateTime,tpepDropoffDateTime, passengerCount, tripDistance,\
@@ -85,7 +85,7 @@ def get_all_taxi_trips(root:"TaxiTrip", info: Info)-> typing.List["TaxiTrip"]:
   return data_to_schema_object(TaxiTrip, results, singleton=False) 
 
 
-def get_all_taxi_trips_root_filter(root, info: Info)-> typing.List["TaxiTrip"]:
+async def get_all_taxi_trips_root_filter(root, info: Info)-> typing.List["TaxiTrip"]:
   root_mapping = {
     'Vendor':{
       'filter_statement':'vendorId = ?',
