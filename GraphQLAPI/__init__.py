@@ -2,14 +2,19 @@ import logging
 
 import azure.functions as func
 from azure.functions import AsgiMiddleware
-from strawberry.asgi import GraphQL
-from GraphQLAPI.schemas.root import schema
-#from GraphQLAPI.utils.resolvers import get_resolvers
+from GraphQLAPI.models.schema import schema
+from GraphQLAPI.utils.app_extension import MyGrapQL
 
+# credentials = DefaultAzureCredential()
+# credentials = DefaultAzureCredential()
+# conn_string = get_connection_string()
+# conn_kwargs = add_pyodbc_for_access_token(credentials)
 
-app = GraphQL(
-    schema = schema
+app = MyGrapQL(
+    schema = schema,
+    credentials=None
     ) 
 
-def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
-    return AsgiMiddleware(app).handle(req, context)
+async def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
+    logging.info('Python HTTP trigger function processed a request.')
+    return await AsgiMiddleware(app).handle_async(req, context)
