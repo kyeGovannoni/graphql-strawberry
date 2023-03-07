@@ -4,6 +4,7 @@ import strawberry
 from strawberry.types import Info
 import datetime
 from GraphQLAPI.utils.directives import Keys
+from GraphQLAPI.utils.permissions import IsAuthorized
 
 DATA_LOOKUP = {
   "actors":[
@@ -127,7 +128,7 @@ class Film:
   actorId: strawberry.Private[str]
   id: strawberry.Private[str]
   title: str
-  actors: typing.List["Actor"] = strawberry.field(resolver=get_actors_for_film)
+  actors: typing.List["Actor"] = strawberry.field(resolver=get_actors_for_film, permission_classes=[IsAuthorized])
   date: datetime.date
 
 ##schema 
@@ -140,7 +141,7 @@ class Actor:
   full_name: str = strawberry.field(resolver=full_name)
   age: int
   admin: str
-  films: typing.List["Film"] = strawberry.field(resolver=get_films_for_actor)
+  films: typing.List["Film"] = strawberry.field(resolver=get_films_for_actor, permission_classes=[IsAuthorized])
   height: int
   data_created_on: datetime.datetime
   uniqueId: uuid.UUID
@@ -148,8 +149,8 @@ class Actor:
 
 @strawberry.type
 class FilmQuery:
-    getActors: typing.List[Actor] = strawberry.field(resolver=get_actors) 
-    getActor: Actor = strawberry.field(resolver=get_actor)
-    getAllFilms: typing.List[Film] = strawberry.field(resolver=get_films)
+    getActors: typing.List[Actor] = strawberry.field(resolver=get_actors, permission_classes=[IsAuthorized]) 
+    getActor: Actor = strawberry.field(resolver=get_actor, permission_classes=[IsAuthorized]) 
+    getAllFilms: typing.List[Film] = strawberry.field(resolver=get_films, permission_classes=[IsAuthorized])
 
 
